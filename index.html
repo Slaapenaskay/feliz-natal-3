@@ -1,155 +1,249 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Feliz Natal ❤️</title>
+<meta charset="UTF-8">
+<title>Natal Especial ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #f6fff8, #ffeef2);
-      color: #333;
-      text-align: center;
-    }
+<style>
+:root {
+    --fundo-natal: radial-gradient(circle, #d62828 0%, #4b0000 100%);
+    --dourado: #ffd700;
+}
 
-    .inicio {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    h1 {
-      font-size: 2.4em;
-    }
+body {
+    font-family: 'Dancing Script', cursive;
+    background-color: #4b0000;
+    color: white;
+    overflow: hidden; /* Mantém o sistema de páginas limpo */
+    height: 100vh;
+}
 
-    button {
-      padding: 15px 30px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 30px;
-      background: #d62828;
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
+#neve-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 1;
+}
 
-    button:hover {
-      transform: scale(1.05);
-    }
+.secao-pag {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 10;
+    background: var(--fundo-natal);
+}
 
-    .conteudo {
-      display: none;
-      max-width: 900px;
-      margin: auto;
-      padding: 40px 20px;
-    }
+.secao-pag.visivel {
+    display: flex;
+    animation: trocarPagina 0.5s ease-out;
+}
 
-    .texto {
-      font-size: 1.1em;
-      line-height: 1.6;
-      margin-bottom: 30px;
-    }
+@keyframes trocarPagina {
+    from { opacity: 0; transform: scale(1.1); }
+    to { opacity: 1; transform: scale(1); }
+}
 
-    .galeria img {
-      width: 250px;
-      border-radius: 15px;
-      margin: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
+.balao-texto {
+    background: rgba(255, 255, 255, 0.98);
+    color: #2c3e50;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    max-width: 380px;
+    width: 85%;
+    margin: 15px 0;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    z-index: 100; /* Texto sempre no topo */
+    text-align: center;
+}
 
-    video {
-      margin-top: 30px;
-      border-radius: 15px;
-      max-width: 90%;
-    }
+/* 📸 POSICIONAMENTO DAS FOTOS */
+.foto-avulsa {
+    width: 150px;
+    border: 5px solid white;
+    border-radius: 4px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+    position: absolute;
+    z-index: 5; /* Fotos ficam atrás do texto/botão */
+}
 
-    .controle-musica {
-      margin: 20px 0;
-    }
-  </style>
+/* Estilos de posição para evitar bagunça */
+.sozinha { bottom: 20%; left: 50%; transform: translateX(-50%) rotate(-3deg); }
+.esq-topo { top: 5%; left: 5%; transform: rotate(-10deg); }
+.dir-baixo { bottom: 5%; right: 5%; transform: rotate(10deg); }
+.dir-topo { top: 5%; right: 5%; transform: rotate(8deg); }
+
+/* 🔘 BOTÕES */
+.area-botoes {
+    display: flex;
+    gap: 10px;
+    z-index: 110;
+}
+
+.btn-acao {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border: 2px solid var(--dourado);
+    border-radius: 50px;
+    background: #1b4332;
+    color: white;
+    cursor: pointer;
+    font-family: 'Dancing Script', cursive;
+}
+
+.btn-voltar { background: #6c757d; border: 2px solid white; }
+
+video {
+    width: 90%;
+    max-width: 340px;
+    border: 4px solid white;
+    border-radius: 12px;
+    z-index: 100;
+}
+
+#tempo-juntos { color: #d62828; font-weight: bold; }
+</style>
 </head>
 <body>
 
-<!-- TELA INICIAL -->
-<div class="inicio" id="inicio">
-  <h1>🎄 Feliz Natal, meu amor ❤️</h1>
-  <button onclick="iniciar()">Surpresa 🎁</button>
+<canvas id="neve-canvas"></canvas>
+<audio id="trilha-sonora" loop><source src="musica.mp3" type="audio/mpeg"></audio>
+
+<div class="secao-pag visivel" id="tela0">
+    <h1 style="font-size: 3rem; color: var(--dourado); text-shadow: 2px 2px 10px #000; margin-bottom: 30px;">Feliz Natal, Meu Amor ❤️</h1>
+    <button class="btn-acao" onclick="irPag(0, 1)">Abrir Surpresa 🎁</button>
 </div>
 
-<!-- CONTEÚDO -->
-<div class="conteudo" id="conteudo">
+<div class="secao-pag" id="tela1">
+    <img src="foto1.jpg" class="foto-avulsa sozinha">
+    <div class="balao-texto">
+        <p>Fiz este site simples com muito carinho. Mesmo sem dinheiro, queria te dar algo que viesse de mim. ❤️</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao" onclick="irPag(1, 2)">Próxima Página ➔</button>
+    </div>
+</div>
 
-  <audio id="musica" loop>
-    <source src="musica.mp3" type="audio/mpeg">
-  </audio>
+<div class="secao-pag" id="tela2">
+    <img src="foto2.jpg" class="foto-avulsa esq-topo">
+    <div class="balao-texto">
+        <p>Apesar de tudo, eu continuo te amando loucamente. Continuo sendo o mesmo menino apaixonado por você.</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(2, 1)">⬅</button>
+        <button class="btn-acao" onclick="irPag(2, 3)">Continuar ➔</button>
+    </div>
+</div>
 
-  <div class="controle-musica">
-    <button onclick="toggleMusica()">⏯️ Pausar / Tocar música</button>
-  </div>
+<div class="secao-pag" id="tela3">
+    <img src="foto3.jpg" class="foto-avulsa dir-baixo">
+    <div class="balao-texto">
+        <p>Nossa história sempre foi um tanto conturbada, mas quero que saiba que eu ainda estou aqui, me esforçando por nós.</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(3, 2)">⬅</button>
+        <button class="btn-acao" onclick="irPag(3, 4)">Próxima ➔</button>
+    </div>
+</div>
 
-  <div class="texto">
-    <p>
-      Fiz este site simples, mas foi feito com muito carinho.
-      Mesmo sem dinheiro, eu queria te dar algo que viesse de mim.
-      Obrigado por estar comigo, pelo cuidado, pela paciência e pelos momentos bons.
-      Eu te amo demais, mesmo com nossos problemas e defeitos, amo o tempo que passo com você.
-    </p>
+<div class="secao-pag" id="tela4">
+    <img src="foto4.jpg" class="foto-avulsa esq-topo">
+    <img src="foto5.jpg" class="foto-avulsa dir-baixo">
+    <div class="balao-texto">
+        <p>Eu amo nosso carinho e o quanto somos grudentos. Adoro ficar agarradinho com você, mesmo sem fazer nada.</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(4, 3)">⬅</button>
+        <button class="btn-acao" onclick="irPag(4, 5)">Virar Página ➔</button>
+    </div>
+</div>
 
-    <p>
-      Sei que estamos num momento delicado, apesar de tudo, eu continuo te amando loucamente, meu amor.
-      Ainda amo tudo em você, sua risada, seu jeitinho esquisito que eu amo.
-      Continuo sendo o mesmo menino apaixonado por você.
-    </p>
+<div class="secao-pag" id="tela5">
+    <img src="foto6.jpg" class="foto-avulsa dir-topo">
+    <div class="balao-texto">
+        <p>Amo seu jeitinho meio maluca. Não existe outra igual a você para mim. Seu jeito é único e eu a amo.</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(5, 4)">⬅</button>
+        <button class="btn-acao" onclick="irPag(5, 6)">Continuar ➔</button>
+    </div>
+</div>
 
-    <p>
-      Espero poder construir nosso futuro, resolver todas as inseguranças
-      e conseguir ter nossa casinha com nossos filhos
-      (gatinhos e cachorros).
-      Eu te amo, amor. Feliz Natal ❤️
-    </p>
+<div class="secao-pag" id="tela6">
+    <img src="foto7.jpg" class="foto-avulsa esq-topo">
+    <img src="foto8.jpg" class="foto-avulsa dir-baixo">
+    <div class="balao-texto">
+        <p>Queria pedir desculpas pelos meus erros. Odeio ver você chorar e quero ser seu porto seguro sempre.</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(6, 5)">⬅</button>
+        <button class="btn-acao" onclick="irPag(6, 7)">Finalizando... ➔</button>
+    </div>
+</div>
 
-    <p>
-      Ano que vem vou fazer um presente inesquecível pra você.
-      Me desculpa por fazer algo tão simples.
-      <br><strong>Kay</strong>
-    </p>
-  </div>
+<div class="secao-pag" id="tela7">
+    <img src="foto9.jpg" class="foto-avulsa dir-topo">
+    <img src="foto10.jpg" class="foto-avulsa esq-topo" style="top:60%">
+    <div class="balao-texto">
+        <p>Você é o amor da minha vida. Obrigado por cada momento. Espero construirmos nossa casinha logo!</p>
+    </div>
+    <div class="area-botoes">
+        <button class="btn-acao btn-voltar" onclick="irPag(7, 6)">⬅</button>
+        <button class="btn-acao" onclick="irPag(7, 8)">Ver o Vídeo ❤️</button>
+    </div>
+</div>
 
-  <div class="galeria">
-    <img src="foto1.jpg" alt="Nós dois">
-    <img src="foto2.jpg" alt="Momentos juntos">
-    <img src="foto3.jpg" alt="Meu amor">
-  </div>
-
-  <video controls playsinline>
-    <source src="video.mp4" type="video/mp4">
-  </video>
-
+<div class="secao-pag" id="tela8">
+    <video controls playsinline><source src="video.mp4" type="video/mp4"></video>
+    <div class="balao-texto">
+        <div id="tempo-juntos"></div>
+        <p style="margin-top: 5px;"><strong>Com amor, Kay</strong></p>
+    </div>
+    <button class="btn-acao" onclick="location.reload()">Recomeçar 🎄</button>
 </div>
 
 <script>
-function iniciar() {
-  document.getElementById("inicio").style.display = "none";
-  document.getElementById("conteudo").style.display = "block";
-
-  const musica = document.getElementById("musica");
-  musica.volume = 0.4;
-  musica.play();
+function irPag(idAtu, idProx) {
+    if(idAtu === 0) {
+        const s = document.getElementById("trilha-sonora");
+        s.volume = 0.3; s.play();
+    }
+    document.getElementById("tela" + idAtu).classList.remove("visivel");
+    document.getElementById("tela" + idProx).classList.add("visivel");
 }
 
-function toggleMusica() {
-  const musica = document.getElementById("musica");
-  if (musica.paused) {
-    musica.play();
-  } else {
-    musica.pause();
-  }
+const cvs = document.getElementById("neve-canvas");
+const ctx = cvs.getContext("2d");
+function res() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+res(); window.onresize = res;
+let f = [];
+for(let i=0; i<70; i++) f.push({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, d: Math.random()+1});
+function ani() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    ctx.fillStyle = "white"; ctx.beginPath();
+    for(let n of f) {
+        ctx.moveTo(n.x, n.y); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+        n.y += n.d; if(n.y > cvs.height) n.y = -10;
+    }
+    ctx.fill(); requestAnimationFrame(ani);
 }
+ani();
+
+const start = new Date("2020-12-20");
+function calc() {
+    const diff = new Date() - start;
+    const dias = Math.floor(diff / (1000*60*60*24));
+    document.getElementById("tempo-juntos").innerText = `Juntos há ${dias} dias! ❤️`;
+}
+calc();
 </script>
-
 </body>
 </html>
