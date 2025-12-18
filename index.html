@@ -33,7 +33,7 @@ body {
     width: 100%; height: 100%;
     display: none;
     flex-direction: column;
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    justify-content: center;
     align-items: center;
     padding: 20px;
     z-index: 10;
@@ -44,34 +44,33 @@ body {
 
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-/* 📦 CONTAINER ORGANIZADOR (O segredo está aqui) */
 .conteudo-organizado {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px; /* Espaço entre texto, foto e botão */
+    gap: 15px;
     width: 100%;
     max-width: 400px;
+    z-index: 100;
 }
 
 .carta {
     background: rgba(255, 255, 255, 0.95);
     color: #2c3e50;
-    padding: 20px;
+    padding: 15px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     width: 100%;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     text-align: center;
 }
 
-/* 🖼️ FOTOS (Agora elas respeitam o espaço) */
 .foto-moldura {
-    width: 200px; /* Tamanho da foto */
+    width: 180px;
     border: 6px solid white;
     border-radius: 4px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    transform: rotate(-3deg); /* Leve inclinação para charme */
+    transform: rotate(-3deg);
 }
 
 .dupla-fotos {
@@ -82,11 +81,20 @@ body {
 }
 
 .foto-pequena {
-    width: 140px;
+    width: 130px;
     border: 4px solid white;
 }
 
-/* 🔘 BOTÕES */
+/* 🎥 AJUSTE DO VÍDEO FINAL */
+.video-final {
+    width: 100%;
+    max-width: 280px; /* Largura controlada */
+    max-height: 40vh; /* Não deixa ocupar a tela toda */
+    border: 5px solid white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
 .botao {
     padding: 12px 25px;
     font-size: 1.2rem;
@@ -96,12 +104,10 @@ body {
     border-radius: 50px;
     cursor: pointer;
     font-family: 'Dancing Script', cursive;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-video { width: 100%; max-width: 300px; border: 4px solid white; border-radius: 10px; }
+#dias { color: #d62828; font-weight: bold; font-size: 1.3rem; margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -127,7 +133,7 @@ video { width: 100%; max-width: 300px; border: 4px solid white; border-radius: 1
         <div class="carta">Apesar de tudo, eu continuo te amando loucamente. Continuo sendo o mesmo menino apaixonado por você.</div>
         <img src="foto2.jpg" class="foto-moldura" style="transform: rotate(3deg);">
         <div style="display:flex; gap:10px;">
-            <button class="botao" style="background:#666" onclick="ir(2, 1)">⬅</button>
+            <button class="botao" style="background:#666; border:1px solid white;" onclick="ir(2, 1)">⬅</button>
             <button class="botao" onclick="ir(2, 3)">Continuar ➔</button>
         </div>
     </div>
@@ -140,7 +146,7 @@ video { width: 100%; max-width: 300px; border: 4px solid white; border-radius: 1
             <img src="foto3.jpg" class="foto-moldura foto-pequena">
             <img src="foto4.jpg" class="foto-moldura foto-pequena" style="transform: rotate(5deg);">
         </div>
-        <button class="botao" onclick="ir(3, 4)">Virar Página ➔</button>
+        <button class="botao" onclick="ir(3, 4)">Próxima ➔</button>
     </div>
 </div>
 
@@ -151,7 +157,7 @@ video { width: 100%; max-width: 300px; border: 4px solid white; border-radius: 1
             <img src="foto5.jpg" class="foto-moldura foto-pequena" style="transform: rotate(-4deg);">
             <img src="foto6.jpg" class="foto-moldura foto-pequena">
         </div>
-        <button class="botao" onclick="ir(4, 5)">Próxima ➔</button>
+        <button class="botao" onclick="ir(4, 5)">Virar Página ➔</button>
     </div>
 </div>
 
@@ -175,20 +181,30 @@ video { width: 100%; max-width: 300px; border: 4px solid white; border-radius: 1
 </div>
 
 <div class="tela" id="t7">
-    <div class="conteudo-organizado">
-        <img src="foto10.jpg" class="foto-moldura" style="width:150px; margin-bottom:0;">
-        <video controls playsinline><source src="video.mp4" type="video/mp4"></video>
+    <div class="conteudo-organizado" style="gap: 10px;">
+        <video class="video-final" controls playsinline>
+            <source src="video.mp4" type="video/mp4">
+        </video>
+        
+        <img src="foto10.jpg" class="foto-moldura" style="width:130px; transform: rotate(0); border-width: 4px;">
+        
         <div class="carta">
-            <p>Feliz Natal! ❤️</p>
-            <div id="dias" style="color:red; font-weight:bold"></div>
+            <p>Espero que possamos construir nossa casinha. Feliz Natal! ❤️</p>
+            <div id="dias"></div>
+            <p style="font-size: 1rem; margin-top: 5px;"><strong>Com amor, Kay</strong></p>
         </div>
+        
         <button class="botao" onclick="location.reload()">Recomeçar 🎄</button>
     </div>
 </div>
 
 <script>
 function ir(a, p) {
-    if(a === 0) { document.getElementById("musica").play(); }
+    if(a === 0) {
+        const m = document.getElementById("musica");
+        m.volume = 0.3;
+        m.play();
+    }
     document.getElementById("t" + a).classList.remove("ativa");
     document.getElementById("t" + p).classList.add("ativa");
 }
